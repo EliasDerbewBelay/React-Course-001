@@ -5,6 +5,8 @@ function App() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -22,6 +24,8 @@ function App() {
     }
     fetchProducts();
   }, []);
+
+
   if (loading) {
     return (
       <div className="status">
@@ -34,20 +38,18 @@ function App() {
     return (
       <div className="status error">
         {" "}
-        <h2>{error}</h2>{" "}
+        <h2>{error}</h2>
       </div>
     );
   }
   return (
     <div className="app">
-      {" "}
-      <h1>Product Store</h1>{" "}
+      <h1>Product Store</h1>
       <div className="products">
-        {" "}
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
-        ))}{" "}
-      </div>{" "}
+        ))}
+      </div>
     </div>
   );
 }
