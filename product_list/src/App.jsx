@@ -6,6 +6,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
 
   useEffect(() => {
     async function fetchProducts() {
@@ -25,9 +26,14 @@ function App() {
     fetchProducts();
   }, []);
 
-  const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredProducts = products.filter((product) => {
+    const mathesSearch = product.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesCategory = category === "all" || product.category === category;
+
+    return matchesCategory && mathesSearch;
+  });
 
   if (loading) {
     return (
@@ -55,6 +61,16 @@ function App() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+      </div>
+
+      <div className="category">
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="all">All</option>
+          <option value="electronics">Electronics</option>
+          <option value="jewelery">Jewelry</option>
+          <option value="men's clothing">Men's Clothing</option>
+          <option value="women's clothing">Women's Clothing</option>
+        </select>
       </div>
       <h1>Product Store</h1>
       <div className="products">
