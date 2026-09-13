@@ -5,7 +5,7 @@ function App() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function fetchProducts() {
@@ -25,6 +25,9 @@ function App() {
     fetchProducts();
   }, []);
 
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase()),
+  );
 
   if (loading) {
     return (
@@ -44,9 +47,18 @@ function App() {
   }
   return (
     <div className="app">
+      <div className="search">
+        <input
+          className="search-input"
+          type="text"
+          placeholder="search for products..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <h1>Product Store</h1>
       <div className="products">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
