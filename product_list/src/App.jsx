@@ -1,84 +1,30 @@
-import { useEffect, useState } from "react";
-import ProductCard from "./components/ProductCard";
-import "./App.css";
+import { Routes, Route } from "react-router";
+import Home from "./pages/Home";
+import Products from "./pages/Products";
+import Cart from "./pages/Cart";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Navbar from "./components/Navbar";
+import ProductDetails from "./pages/ProductDetails";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
-
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const response = await fetch("https://fakestoreapi.com/products");
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        setError("Unable to load products.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProducts();
-  }, []);
-
-  const filteredProducts = products.filter((product) => {
-    const mathesSearch = product.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesCategory = category === "all" || product.category === category;
-
-    return matchesCategory && mathesSearch;
-  });
-
-  if (loading) {
-    return (
-      <div className="status">
-        {" "}
-        <h2>Loading products...</h2>{" "}
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="status error">
-        {" "}
-        <h2>{error}</h2>
-      </div>
-    );
-  }
   return (
-    <div className="app">
-      <div className="search">
-        <input
-          className="search-input"
-          type="text"
-          placeholder="search for products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
 
-      <div className="category">
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="all">All</option>
-          <option value="electronics">Electronics</option>
-          <option value="jewelery">Jewelry</option>
-          <option value="men's clothing">Men's Clothing</option>
-          <option value="women's clothing">Women's Clothing</option>
-        </select>
-      </div>
-      <h1>Product Store</h1>
-      <div className="products">
-        {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </div>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+        
+      </Routes>
+    </>
   );
 }
 export default App;
