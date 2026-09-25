@@ -15,7 +15,6 @@ function Navbar() {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
-    { name: "Cart", path: "/cart" },
   ];
   return (
     <header className="border-b border-zinc-200 bg-white">
